@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    command: air -c .air.toml
+    depends_on:
+      - mysql
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/workspace
+      - app-data:/app
+    working_dir: /workspace
+
+  mysql:
+    platform: linux/x86_64
+    container_name: mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_DATABASE: go_lang_development
+    ports:
+      - 3306:3306
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./config/charset.cnf:/etc/mysql/conf.d/charset.cnf
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
+  app-data:
