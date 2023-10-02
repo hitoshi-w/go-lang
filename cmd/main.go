@@ -15,7 +15,6 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-
 func main() {
 	if err := run(context.Background()); err != nil {
 		log.Printf("failed to terminate server: %v", err)
