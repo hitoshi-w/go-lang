@@ -1,7 +1,7 @@
 package store
 
 import (
-	// "errors"
+	"errors"
 
 	"github.com/hitoshi-w/go-lang/entity"
 )
@@ -11,11 +11,11 @@ type TaskStore struct {
 	Tasks map[entity.TaskID]*entity.Task
 }
 
-// var (
-// 	Tasks = &TaskStore{Tasks: map[int]*entity.Task}
+var (
+	Tasks = &TaskStore{Tasks: map[entity.TaskID]*entity.Task{}}
 
-// 	ErrNotFound = errors.New("not found")
-// )
+	ErrNotFound = errors.New("not found")
+)
 
 func (ts *TaskStore) Add(t *entity.Task) (entity.TaskID, error) {
 	ts.LastID++

@@ -3,7 +3,7 @@ package entity
 import "time"
 
 // defined type を使って独自の型を定義することで、誤った型の代入を防ぐ
-type TaskID int64
+type TaskID int
 type TaskStatus string
 
 const (
