@@ -1,36 +1,26 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"log"
-	"net"
-	"os"
-
 	"github.com/hitoshi-w/go-lang/config"
+	"github.com/hitoshi-w/go-lang/infrastructure"
 )
 
 func main() {
-	if err := run(context.Background()); err != nil {
-		log.Printf("failed to terminate server: %v", err)
-		os.Exit(1)
-	}
-}
-
-func run(ctx context.Context) error {
-	cfg, err := config.New()
+	// 環境変数の設定
+	cf, err := config.Initialize()
 	if err != nil {
-		return err
+		panic("failed to initialize configuration:" + err.Error())
 	}
-	l, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.Port))
-	if err != nil {
-		log.Fatalf("failed to listen port %d: %v", cfg.Port, err)
+
+	// DBへの接続設定
+	dbConfig := infrastructure.DBConfig(cf.DB)
+	infrastructure.InitializeDB(&dbConfig)
+
+	// ルーティングの設定
+	r := infrastructure.InitializeRouter()
+
+	// サーバーの起動
+	if err := r.Run(); err != nil {
+		panic("failed to start server")
 	}
-	url := fmt.Sprintf("http://%s", l.Addr().String())
-	log.Printf("start with %v", url)
-
-	mux := NewMux()
-	s := NewServer(l, mux)
-
-	return s.Run(ctx)
 }

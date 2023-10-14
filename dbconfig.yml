@@ -1,0 +1,4 @@
+development:
+  dialect: mysql
+  datasource: ${DB_USERNAME}:@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}?charset=${DB_CHARSET}&collation=${DB_COLLATION}&parseTime=True&loc=Local
+  dir: migrations

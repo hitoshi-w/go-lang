@@ -15,8 +15,14 @@ services:
       - app-data:/app
     working_dir: /workspace
     environment:
-      TODO_ENV: dev
-      PORT: 3000
+      APP_ENV: development
+      DB_HOST: mysql
+      DB_NAME: go_lang_development
+      DB_PASSWORD: ""
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_CHARSET: utf8mb4
+      DB_COLLATION: utf8mb4_unicode_ci
 
   mysql:
     platform: linux/x86_64

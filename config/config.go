@@ -1,19 +1,29 @@
 package config
 
-import "github.com/caarlos0/env/v9"
+import "github.com/kelseyhightower/envconfig"
 
+type (
+	DBConfig struct {
+		Charset   string `envconfig:"CHARSET"`
+		Password  string `envconfig:"PASSWORD"`
+		Collation string `envconfig:"COLLATION"`
+		Host      string `envconfig:"HOST"`
+		Name      string `envconfig:"NAME"`
+		Port      string `envconfig:"PORT"`
+		Username  string `envconfig:"USERNAME"`
+	}
+)
 
-type Config struct {
-	Env string `env:"TODO_ENV" envDefault:"dev"`
-	Port int `env:"PORT" envDefault:"80"`
+type Configuration struct {
+	DB DBConfig
 }
 
-func New() (*Config, error) {
-	cfg := &Config{}
+var config Configuration
 
-	if err := env.Parse(cfg); err != nil {
+func Initialize() (*Configuration, error) {
+	if err := envconfig.Process("db", &config.DB); err != nil {
 		return nil, err
 	}
 
-	return  cfg, nil
+	return &config, nil
 }
