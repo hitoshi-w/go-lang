@@ -1,26 +1,19 @@
 package main
 
 import (
-	"github.com/hitoshi-w/go-lang/config"
-	"github.com/hitoshi-w/go-lang/infrastructure"
+	"github.com/gin-gonic/gin"
+	"github.com/hitoshi-w/go-lang/api/route"
+	"github.com/hitoshi-w/go-lang/bootstrap"
 )
 
 func main() {
-	// 環境変数の設定
-	cf, err := config.Initialize()
-	if err != nil {
-		panic("failed to initialize configuration:" + err.Error())
-	}
+	app := bootstrap.App()
 
-	// DBへの接続設定
-	dbConfig := infrastructure.DBConfig(cf.DB)
-	infrastructure.InitializeDB(&dbConfig)
+	db := app.Gorm
 
-	// ルーティングの設定
-	r := infrastructure.InitializeRouter()
+	gin := gin.Default()
 
-	// サーバーの起動
-	if err := r.Run(); err != nil {
-		panic("failed to start server")
-	}
+	route.Setup(db, gin)
+
+	gin.Run()
 }
