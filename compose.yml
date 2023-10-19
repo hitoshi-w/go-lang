@@ -8,6 +8,7 @@ services:
     command: air -c .air.toml
     depends_on:
       - mysql
+      - redis
     ports:
       - 3000:3000
     volumes:
@@ -16,6 +17,7 @@ services:
     working_dir: /workspace
     environment:
       APP_ENV: development
+      PORT: 3000
       DB_HOST: mysql
       DB_NAME: go_lang_development
       DB_PASSWORD: ""
@@ -23,6 +25,9 @@ services:
       DB_USERNAME: root
       DB_CHARSET: utf8mb4
       DB_COLLATION: utf8mb4_unicode_ci
+      REDIS_HOST: redis
+      REDIS_PASSWORD: password
+      REDIS_PORT: 6379
 
   mysql:
     platform: linux/x86_64
@@ -36,9 +41,23 @@ services:
       - 3306:3306
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - ./mysql/charset.cnf:/etc/mysql/conf.d/charset.cnf
+      - ./config/charset.cnf:/etc/mysql/conf.d/charset.cnf
       - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - type: volume
+        source: redis-data
+        target: /data
+      - type: bind
+        source: ./config/redis.conf
+        target: /data/config/redis.conf
+    command: [ "redis-server", "/data/config/redis.conf" ]
 
 volumes:
   mysql-data:
   app-data:
+  redis-data:

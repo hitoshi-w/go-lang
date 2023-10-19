@@ -9,11 +9,15 @@ import (
 func main() {
 	app := bootstrap.App()
 
+	env := app.Env
+
 	db := app.Gorm
+
+	redis := app.Redis
 
 	gin := gin.Default()
 
-	route.Setup(db, gin)
+	route.Setup(env, redis, db, gin)
 
-	gin.Run()
+	gin.Run(":3000")
 }

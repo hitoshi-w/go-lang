@@ -8,6 +8,7 @@ type UserID int64
 type User struct {
 	ID        UserID
 	Name      string
+	Email     string
 	Password  string
 	Role      string
 	CreatedAt time.Time
